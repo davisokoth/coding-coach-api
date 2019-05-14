@@ -1,16 +1,17 @@
 import { Injectable, Inject } from '@graphql-modules/di';
-import { MenteeEntity } from './mentee-entity';
+import { User } from './User';
 import { TableService, TableQuery } from 'azure-storage';
 
-export interface IMenteeRepository {
-  addMentor(mentee: MenteeEntity): Promise<void>;
-  getMentor(menteeId: string): Promise<MenteeEntity>;
+export interface IUserRepository {
+  save(user: User): Promise<void>;
+  find(): Promise<User[]>;
   tableName: string;
 }
 
 @Injectable()
-class MenteeRepository implements IMenteeRepository {
-  public tableName: string = 'menteeentity';
+class UserRepository implements IUserRepository {
+  public tableName: string = 'userentity';
+
   constructor(@Inject('TableService') private tableService: TableService) {
     this.tableService.doesTableExist(this.tableName, (error, result) => {
       if (!result.exists) {
@@ -21,12 +22,13 @@ class MenteeRepository implements IMenteeRepository {
       }
     });
   }
-  addMentor(mentee: MenteeEntity): Promise<void> {
+
+  public async save(user: User): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.tableService.insertEntity<MenteeEntity>(
+      this.tableService.insertEntity<User>(
         this.tableName,
-        mentee,
-        error => {
+        user,
+        (error) => {
           if (error) {
             reject(error);
           } else {
@@ -36,12 +38,13 @@ class MenteeRepository implements IMenteeRepository {
       );
     });
   }
-  getMentor(menteeId: string): Promise<MenteeEntity> {
+
+  // @TODO: Add filters as a parameter, for now we are just returning
+  // all users, but ideally we should use the filters we have in the alpha site
+  public async find(/* filters: object */): Promise<User[]> {
     return new Promise((resolve, reject) => {
-      const query = new TableQuery()
-        .top(1)
-        .where('PartitionKey eq ?', menteeId);
-      this.tableService.queryEntities<MenteeEntity>(
+      const query = new TableQuery();
+      this.tableService.queryEntities<User>(
         this.tableName,
         query,
         null,
@@ -49,8 +52,7 @@ class MenteeRepository implements IMenteeRepository {
           if (error) {
             reject(error);
           } else {
-            const entity = result.entries[0];
-            resolve(entity);
+            resolve(result.entries);
           }
         }
       );
@@ -58,4 +60,4 @@ class MenteeRepository implements IMenteeRepository {
   }
 }
 
-export { MenteeRepository };
+export { UserRepository };

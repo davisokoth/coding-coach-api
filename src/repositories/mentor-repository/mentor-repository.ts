@@ -1,17 +1,18 @@
-import { Injectable, Inject } from "@graphql-modules/di";
-import { MentorEntity } from "./mentor-entity";
-import { TableService, TableQuery } from "azure-storage";
+import { Injectable, Inject } from '@graphql-modules/di';
+import { MentorEntity } from './mentor-entity';
+import { TableService, TableQuery } from 'azure-storage';
 
-interface IMentorRepository {
-  getMentees(mentorId: string): Promise<Array<MentorEntity>>;
+export interface IMentorRepository {
+  getMentees(mentorId: string): Promise<MentorEntity[]>;
   addMentee(mentor: MentorEntity): Promise<void>;
   tableName: string;
 }
 
 @Injectable()
 class MentorRepository implements IMentorRepository {
-  public tableName: string = "mentorentity";
-  constructor(@Inject("TableService") private tableService: TableService) {
+  public tableName: string = 'mentorentity';
+
+  constructor(@Inject('TableService') private tableService: TableService) {
     this.tableService.doesTableExist(this.tableName, (error, result) => {
       if (!result.exists) {
         this.tableService.createTable(this.tableName, (error, result) => {
@@ -21,9 +22,10 @@ class MentorRepository implements IMentorRepository {
       }
     });
   }
+
   public async getMentees(mentorId: string): Promise<MentorEntity[]> {
     return new Promise((resolve, reject) => {
-      const query = new TableQuery().where("PartitionKey eq ?", mentorId);
+      const query = new TableQuery().where('PartitionKey eq ?', mentorId);
       this.tableService.queryEntities<MentorEntity>(
         this.tableName,
         query,
@@ -57,4 +59,4 @@ class MentorRepository implements IMentorRepository {
   }
 }
 
-export { IMentorRepository, MentorRepository };
+export { MentorRepository };

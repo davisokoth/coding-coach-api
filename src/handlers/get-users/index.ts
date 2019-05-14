@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { AzureFunction } from '@azure/functions';
-import { GetMentor } from './get-mentor-handler';
+import { GetUsers } from './get-users-handler';
 import { Container } from '@container';
 
-const index: AzureFunction = Container.injector.get<GetMentor>(GetMentor).index;
+const index: AzureFunction = Container.injector.get(GetUsers).index;
+
 export { index };
