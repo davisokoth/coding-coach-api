@@ -20,5 +20,6 @@
       "language": "typescriptreact",
       "autoFix": true
     }
-  ]
+  ],
+  "azureFunctions.projectSubpath": "src"
 }

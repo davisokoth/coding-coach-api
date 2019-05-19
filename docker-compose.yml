@@ -1,9 +1,11 @@
 version: "2.1"
 
 services:
-  coding-coach-azure:
+  coding-coach-api:
     build: .
+    volumes:
+      - ./:/src/usr/app
+      - /home/node/node_modules
+    working_dir: /home/node/app
     ports:
       - '7071:7071'
-    expose:
-      - 7071
