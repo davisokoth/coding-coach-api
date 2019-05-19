@@ -3,9 +3,10 @@ version: "2.1"
 services:
   coding-coach-api:
     build: .
+    command: npm run start
     volumes:
-      - ./:/src/usr/app
-      - /home/node/node_modules
+      - ./:/home/node/app
+      # - /home/node/node_modules
     working_dir: /home/node/app
     ports:
       - '7071:7071'

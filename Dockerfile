@@ -26,15 +26,18 @@ RUN apt-get update && apt-get install yarn
 RUN useradd -m node && echo "node:node" | chpasswd && adduser node sudo
 RUN mkdir /home/.npm
 RUN mkdir /home/.cache
+RUN mkdir /home/.azurefunctions
 RUN chown -R node /home/.npm
 RUN chown -R node /home/.cache
-RUN chown -R node /home/node 
+RUN chown -R node /home/.azurefunctions
 
 # Good idea to switch back to the node user.
 USER node
 
-ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
-ENV PATH=$PATH:/home/node/.npm-global/bin
+RUN mkdir -p /home/node/app
+
+ENV NPM_CONFIG_PREFIX=/home/node/.npm
+ENV PATH=$PATH:/home/node/.npm/bin
 WORKDIR /home/node/app
 ENV AzureWebJobsScriptRoot=/home/node/app
 COPY package.json /home/node/app
@@ -42,4 +45,4 @@ RUN npm i -g copyfiles onchange rimraf typescript ttypescript
 RUN npm i -g azure-functions-core-tools@core --unsafe-perm true
 COPY . /home/node/app
 EXPOSE 7071
-CMD [ "npm", "run", "start"]
+# CMD [ "npm", "run", "start"]
