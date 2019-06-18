@@ -30,6 +30,7 @@ RUN mkdir /home/.azurefunctions
 RUN chown -R node /home/.npm
 RUN chown -R node /home/.cache
 RUN chown -R node /home/.azurefunctions
+RUN chown -R node /home/.dotnet
 
 # Good idea to switch back to the node user.
 USER node
