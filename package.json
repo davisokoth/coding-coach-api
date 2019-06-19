@@ -23,11 +23,12 @@
     "watch": "tsc -w & onchange \"$npm_package_config_azureFunctions_rootDir/**/*.json\" \"$npm_package_config_azureFunctions_rootDir/**/*.csproj\" -- yarn build:configFiles",
     "clean": "rimraf $npm_package_config_azureFunctions_outDir",
     "test": "jest",
-    "lint": "eslint src --ext .ts,.tsx",
+    "lint": "tslint -p tsconfig.json",
     "publish:update": "yarn test && yarn build:production && echo \"Publishing '$npm_package_config_azureFunctions_outDir' content to already deployed function app '$npm_package_name'\" && func azure functionapp publish $npm_package_name --prefix $npm_package_config_azureFunctions_outDir"
   },
   "dependencies": {
     "@azure/functions": "^1.0.1-beta2",
+    "@babel/polyfill": "^7.4.4",
     "@graphql-modules/core": "^0.7.0",
     "@graphql-modules/di": "^0.7.0",
     "@types/node": "^10.12.24",
@@ -39,22 +40,24 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "@fluffy-spoon/substitute": "^1.70.0",
     "@types/async-retry": "^1.4.1",
     "@types/jest": "^24.0.0",
-    "@typescript-eslint/eslint-plugin": "^1.7.0",
-    "@typescript-eslint/parser": "^1.7.0",
     "async-retry": "^1.2.3",
     "azurite": "^2.7.0",
     "copyfiles": "^2.1.0",
-    "eslint": "^5.16.0",
     "husky": "^2.1.0",
     "jest": "23.6.0",
     "onchange": "^5.2.0",
     "rimraf": "^2.6.3",
     "testcontainers": "^1.1.9",
     "ts-jest": "^23.10.5",
+    "ts-node": "^8.3.0",
     "ts-transformer-imports": "^0.4.1",
+    "tslint": "^5.17.0",
     "ttypescript": "^1.5.6"
   },
   "config": {

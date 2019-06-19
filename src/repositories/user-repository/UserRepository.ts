@@ -1,11 +1,11 @@
-import { Injectable, Inject } from '@graphql-modules/di';
+import { Inject, Injectable } from '@graphql-modules/di';
+import { TableQuery, TableService } from 'azure-storage';
 import { User } from './User';
-import { TableService, TableQuery } from 'azure-storage';
 
 export interface IUserRepository {
+  tableName: string;
   save(user: User): Promise<void>;
   find(): Promise<User[]>;
-  tableName: string;
 }
 
 @Injectable()
@@ -15,9 +15,9 @@ class UserRepository implements IUserRepository {
   constructor(@Inject('TableService') private tableService: TableService) {
     this.tableService.doesTableExist(this.tableName, (error, result) => {
       if (!result.exists) {
-        this.tableService.createTable(this.tableName, (error, result) => {
-          console.log(error);
-          console.log(result);
+        this.tableService.createTable(this.tableName, (createError, createResult) => {
+          console.log(createError);
+          console.log(createResult);
         });
       }
     });
@@ -34,7 +34,7 @@ class UserRepository implements IUserRepository {
           } else {
             resolve();
           }
-        }
+        },
       );
     });
   }
@@ -54,7 +54,7 @@ class UserRepository implements IUserRepository {
           } else {
             resolve(result.entries);
           }
-        }
+        },
       );
     });
   }

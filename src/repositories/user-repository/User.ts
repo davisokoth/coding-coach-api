@@ -1,5 +1,5 @@
 
-interface UserProps {
+interface IUserProps {
   userId: string;
   name?: string;
   email?: string;
@@ -19,7 +19,7 @@ export class User {
   public readonly description: string;
   public readonly country: string;
 
-  constructor(data: UserProps) {
+  constructor(data: IUserProps) {
     Object.assign(this, data);
     this.PartitionKey = data.userId;
     this.RowKey = data.email;

@@ -1,7 +1,7 @@
-import 'reflect-metadata';
 import { Context } from '@azure/functions';
 import { Inject, Injectable } from '@graphql-modules/di';
 import { IUserRepository } from '@repositories/user-repository';
+import 'reflect-metadata';
 
 @Injectable()
 class GetUsers {
@@ -9,21 +9,21 @@ class GetUsers {
     // Nothing to do here
   }
 
-  index = async (context: Context): Promise<void> => {
+  public index = async (context: Context): Promise<void> => {
 
     // @TODO: Add filters
     const users = await this.userRepository.find();
 
     context.res = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: {
         success: true,
         users,
       },
+      headers: {
+        'Content-Type': 'application/json',
+      },
     };
-  };
+  }
 }
 
 export { GetUsers };

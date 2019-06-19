@@ -27,6 +27,7 @@ RUN useradd -m node && echo "node:node" | chpasswd && adduser node sudo
 RUN mkdir /home/.npm
 RUN mkdir /home/.cache
 RUN mkdir /home/.azurefunctions
+RUN chown -R node /home
 RUN chown -R node /home/.npm
 RUN chown -R node /home/.cache
 RUN chown -R node /home/.azurefunctions

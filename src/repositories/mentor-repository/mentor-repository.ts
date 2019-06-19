@@ -1,11 +1,11 @@
-import { Injectable, Inject } from '@graphql-modules/di';
+import { Inject, Injectable } from '@graphql-modules/di';
+import { TableQuery, TableService } from 'azure-storage';
 import { MentorEntity } from './mentor-entity';
-import { TableService, TableQuery } from 'azure-storage';
 
 export interface IMentorRepository {
+  tableName: string;
   getMentees(mentorId: string): Promise<MentorEntity[]>;
   addMentee(mentor: MentorEntity): Promise<void>;
-  tableName: string;
 }
 
 @Injectable()
@@ -15,9 +15,9 @@ class MentorRepository implements IMentorRepository {
   constructor(@Inject('TableService') private tableService: TableService) {
     this.tableService.doesTableExist(this.tableName, (error, result) => {
       if (!result.exists) {
-        this.tableService.createTable(this.tableName, (error, result) => {
-          console.log(error);
-          console.log(result);
+        this.tableService.createTable(this.tableName, (createError, createResult) => {
+          console.log(createError);
+          console.log(createResult);
         });
       }
     });
@@ -37,7 +37,7 @@ class MentorRepository implements IMentorRepository {
             const entities = result.entries;
             resolve(entities);
           }
-        }
+        },
       );
     });
   }
@@ -47,13 +47,13 @@ class MentorRepository implements IMentorRepository {
       this.tableService.insertEntity<MentorEntity>(
         this.tableName,
         mentor,
-        error => {
+        (error) => {
           if (error) {
             reject(error);
           } else {
             resolve();
           }
-        }
+        },
       );
     });
   }

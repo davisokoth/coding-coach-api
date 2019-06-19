@@ -1,11 +1,11 @@
-import { Injectable, Inject } from '@graphql-modules/di';
+import { Inject, Injectable } from '@graphql-modules/di';
+import { TableQuery, TableService } from 'azure-storage';
 import { MenteeEntity } from './mentee-entity';
-import { TableService, TableQuery } from 'azure-storage';
 
 export interface IMenteeRepository {
+  tableName: string;
   addMentor(mentee: MenteeEntity): Promise<void>;
   getMentor(menteeId: string): Promise<MenteeEntity>;
-  tableName: string;
 }
 
 @Injectable()
@@ -14,29 +14,29 @@ class MenteeRepository implements IMenteeRepository {
   constructor(@Inject('TableService') private tableService: TableService) {
     this.tableService.doesTableExist(this.tableName, (error, result) => {
       if (!result.exists) {
-        this.tableService.createTable(this.tableName, (error, result) => {
-          console.log(error);
-          console.log(result);
+        this.tableService.createTable(this.tableName, (createError, createResult) => {
+          console.log(createError);
+          console.log(createResult);
         });
       }
     });
   }
-  addMentor(mentee: MenteeEntity): Promise<void> {
+  public addMentor(mentee: MenteeEntity): Promise<void> {
     return new Promise((resolve, reject) => {
       this.tableService.insertEntity<MenteeEntity>(
         this.tableName,
         mentee,
-        error => {
+        (error) => {
           if (error) {
             reject(error);
           } else {
             resolve();
           }
-        }
+        },
       );
     });
   }
-  getMentor(menteeId: string): Promise<MenteeEntity> {
+  public getMentor(menteeId: string): Promise<MenteeEntity> {
     return new Promise((resolve, reject) => {
       const query = new TableQuery()
         .top(1)
@@ -52,7 +52,7 @@ class MenteeRepository implements IMenteeRepository {
             const entity = result.entries[0];
             resolve(entity);
           }
-        }
+        },
       );
     });
   }
