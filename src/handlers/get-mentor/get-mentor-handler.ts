@@ -1,7 +1,7 @@
+import 'reflect-metadata';
 import { Context, HttpRequest } from '@azure/functions';
 import { Inject, Injectable } from '@graphql-modules/di';
 import { IMenteeRepository } from '@repositories/mentee-repository';
-import 'reflect-metadata';
 
 @Injectable()
 class GetMentor {

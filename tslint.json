@@ -5,6 +5,13 @@
         "max-line-length": {
             "options": [120]
         },
+        "ordered-imports": [
+            false,
+            {
+              "import-sources-order": "any",
+              "named-imports-order": "any"
+            }
+        ],
         "new-parens": true,
         "no-arg": true,
         "no-bitwise": true,

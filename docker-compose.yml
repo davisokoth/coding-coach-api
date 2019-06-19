@@ -10,3 +10,13 @@ services:
     working_dir: /home/node/app
     ports:
       - '7071:7071'
+  coding-coach-azurite:
+    build: .
+    ports:
+      - 10000:10000
+      - 10001:10001
+      - 10002:10002
+    expose:
+      - 10000
+      - 10001
+      - 10002

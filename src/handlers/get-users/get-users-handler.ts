@@ -1,7 +1,7 @@
+import 'reflect-metadata';
 import { Context } from '@azure/functions';
 import { Inject, Injectable } from '@graphql-modules/di';
 import { IUserRepository } from '@repositories/user-repository';
-import 'reflect-metadata';
 
 @Injectable()
 class GetUsers {
